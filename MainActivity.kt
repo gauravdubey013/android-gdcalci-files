@@ -21,18 +21,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun numberAction(view: View) {
-        if(view is Button) {
-            if(view.text == ".") {
-                if(canAddDecimal)
-                    workingsScreen.append(view.text)
+        if (view is Button) {
+            val buttonText = view.text.toString()
 
-                canAddDecimal = false
+            if (buttonText == ".") {
+                if (canAddDecimal && !workingsScreen.text.contains(".")) {
+                    workingsScreen.append(buttonText)
+                    canAddDecimal = false
+                }
+            } else {
+                workingsScreen.append(buttonText)
+                canAddOperation = true
+                canAddDecimal = true
             }
-            else
-                workingsScreen.append(view.text)
-            canAddOperation = true
         }
     }
+
 
     fun operationAction(view: View) {
         if(view is Button && canAddOperation) {
@@ -117,6 +121,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     '/' -> {
                         newList.add(prevDigit / nextDigit)
+                        restartIndex = i + 1
+                    }
+                    '%' -> {
+                        newList.add((prevDigit / 100) * nextDigit)
                         restartIndex = i + 1
                     }
                     else -> {
